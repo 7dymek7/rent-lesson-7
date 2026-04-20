@@ -19,14 +19,14 @@ class Manager:
         self.bills = Bill.from_json_file(self.parameters.bills_json_path)
 
     def check_tenants_apartment_keys(self) -> bool:
-        for tenant in self.tenants.values():
-            if tenant.apartment not in self.apartments:
-                return False
-        return True
+        apartment_keys = set(self.apartments.keys())
+        tenant_apartments = (tenant.apartment for tenant in self.tenants.values())
+        return all(apt in apartment_keys for apt in tenant_apartments)
     
-    def get_apartment(self, key: str):
-        return self.apartments.get(key)
-
+    def get_apartment(self, apartment_key: str) -> Apartment | None:
+        if apartment_key in self.apartments:
+            return self.apartments[apartment_key]
+        return None
 
     def get_apartment_costs(self, apartment_key: str, year: int = None, month: int = None) -> float | None:
         if month is not None and (month < 1 or month > 12):
