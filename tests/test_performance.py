@@ -37,4 +37,3 @@ def test_search_for_apartment_large_dataset():
     assert fail_search_time < ALLOWED_SEARCH_TIME_MS, (
         f"Searching for non-existing apartment in {N} apartments took {fail_search_time:.3f}ms, limit {ALLOWED_SEARCH_TIME_MS}ms"
     )
-
