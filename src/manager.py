@@ -17,6 +17,8 @@ class Manager:
         self.tenants = Tenant.from_json_file(self.parameters.tenants_json_path)
         self.transfers = Transfer.from_json_file(self.parameters.transfers_json_path)
         self.bills = Bill.from_json_file(self.parameters.bills_json_path)
+        self.min_transfer = self.parameters.min_transfer if hasattr(self.parameters, 'min_transfer') else 0.0
+        self.max_transfer = self.parameters.max_transfer if hasattr(self.parameters, 'max_transfer') else 100_000.0
 
     def check_tenants_apartment_keys(self) -> bool:
         for tenant in self.tenants.values():
@@ -113,3 +115,14 @@ class Manager:
         if apartment_key not in self.apartments:
             raise ValueError("Apartment key does not exist")
         return any([bill for bill in self.bills if bill.apartment == apartment_key and bill.settlement_year == year and bill.settlement_month == month])
+    
+    def validate_transfer_amount(self, amount: float) -> bool:
+        return self.min_transfer <= amount <= self.max_transfer
+
+    def find_invalid_transfers(self) -> list:
+        invalid = []
+        for transfer in self.transfers:
+            amount = transfer.get("amount_pln")
+            if amount is None or not self.validate_transfer_amount(amount):
+                invalid.append(transfer)
+        return invalid
