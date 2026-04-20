@@ -17,8 +17,8 @@ class Manager:
         self.tenants = Tenant.from_json_file(self.parameters.tenants_json_path)
         self.transfers = Transfer.from_json_file(self.parameters.transfers_json_path)
         self.bills = Bill.from_json_file(self.parameters.bills_json_path)
-        self.min_transfer = parameters.min_transfer if hasattr(parameters, 'min_transfer') else 0.0
-        self.max_transfer = parameters.max_transfer if hasattr(parameters, 'max_transfer') else 100_000.0
+        self.min_transfer = self.parameters.min_transfer if hasattr(self.parameters, 'min_transfer') else 0.0
+        self.max_transfer = self.parameters.max_transfer if hasattr(self.parameters, 'max_transfer') else 100_000.0
 
     def check_tenants_apartment_keys(self) -> bool:
         for tenant in self.tenants.values():
